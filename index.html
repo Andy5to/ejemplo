@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Matrix Te Amo</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      font-family: monospace;
+    }
+    canvas {
+      display: block;
+    }
+    #mensajeFinal {
+      position: absolute;
+      top: 30%;
+      width: 100%;
+      text-align: center;
+      font-size: 4em;
+      font-weight: bold;
+      color: rgb(255, 2, 2);
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      z-index: 10;
+      line-height: 1.3em;
+    }
+  </style>
+</head>
+<body>
+<canvas id="matrixCanvas"></canvas>
+<div id="mensajeFinal">Te quiero princes<br><span style="font-size: 0.6em;">Att: Andy jsjs</span></div>
+
+<script>
+  const canvas = document.getElementById("matrixCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZÑ01";
+  const frase = "TE AMO";
+  const fontSize = 20;
+  const columns = Math.floor(canvas.width / fontSize);
+  const drops = Array.from({ length: columns }, () => Math.random() * -20);
+
+  let tiempo = 0;
+  let mostrarMensaje = false;
+
+  function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#ff0000";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      let text;
+
+      // Aleatoriamente, mostrar una letra de "TE AMO"
+      if (Math.random() < 0.005) {
+        text = frase[Math.floor(Math.random() * frase.length)];
+      } else {
+        text = letras.charAt(Math.floor(Math.random() * letras.length));
+      }
+
+      const x = i * fontSize;
+      const y = drops[i] * fontSize;
+
+      ctx.fillText(text, x, y);
+
+      if (y > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+
+    tiempo++;
+
+    // Mostrar mensaje final después de un tiempo
+    if (tiempo > 400 && !mostrarMensaje) {
+      document.getElementById("mensajeFinal").style.opacity = 1;
+      mostrarMensaje = true;
+    }
+
+    if (!mostrarMensaje) {
+      requestAnimationFrame(draw);
+    }
+  }
+
+  draw();
+</script>
+</body>
+</html>
